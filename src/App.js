@@ -1,24 +1,80 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import Dashboard from "./views/Dashboard/Dashboard";
+import { AuthProvider } from "./contexts/AuthContext";
+
+import Login from "./views/Login/Login";
+import SignUp from "./views/SignUp/SignUp.js";
+import MiniDrawer from "./components/CustomDrawer/MiniDrawer";
+import EnhancedTable from "./components/EnhancedTable/EnhancedTable";
+import EnhancedTableToolbar from "./components/EnhancedTable/EnhancedTableToolbar";
+import EnhancedTableHead from "./components/EnhancedTable/EnhancedTableHead";
+import { Container, Typography } from "@material-ui/core";
+import Users from "./views/Users/Users";
+import AlertDialog from "./components/Dialog/AlertDialog";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <AuthProvider>
+          <Switch>
+            <PrivateRoute exact path="/">
+              <MiniDrawer>
+                <Dashboard />
+              </MiniDrawer>
+            </PrivateRoute>
+
+            <PrivateRoute exact path="/users">
+              <MiniDrawer>
+                <Users />
+              </MiniDrawer>
+            </PrivateRoute>
+
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/signup">
+              <SignUp />
+            </Route>
+
+            {/* Test  */}
+            <Route path="/mini-drawer">
+              <MiniDrawer />
+            </Route>
+
+            {/* Data table */}
+            <Route path="/table">
+              <Container maxWidth="md">
+                <EnhancedTable />
+              </Container>
+            </Route>
+            <Route path="/table-toolbar">
+              <EnhancedTableToolbar />
+            </Route>
+            <Route path="/table-head">
+              <EnhancedTableHead />
+            </Route>
+
+            <Route path="/dialog">
+              <AlertDialog
+                open={true}
+                title="Reset password"
+                severity="info"
+                alertDescription="This account will be reset"
+                content={
+                  <>
+                    <Typography variant="subtitle2">User account</Typography>
+                    <Typography variant="h6">{"ndh1379@gmail.com"}</Typography>
+                  </>
+                }
+                agreeText="Send"
+              />
+            </Route>
+          </Switch>
+        </AuthProvider>
+      </Router>
+    </>
   );
 }
 
