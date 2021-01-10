@@ -23,6 +23,8 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 // assets
 import logo from "../../assets/img/logo.png";
+import { useAuth } from "../../contexts/AuthContext";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 220;
 const navigationList = ["Users", "Games"];
@@ -119,6 +121,8 @@ export default function MiniDrawer({ children }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openMenu = Boolean(anchorEl);
 
+  const { logOut } = useAuth();
+
   const handleDrawerOpen = () => {
     setOpenSideBar(true);
   };
@@ -133,6 +137,10 @@ export default function MiniDrawer({ children }) {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogOut = () => {
+    logOut();
   };
 
   return (
@@ -177,6 +185,7 @@ export default function MiniDrawer({ children }) {
               >
                 <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
                 <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                <MenuItem onClick={handleLogOut}>Log out</MenuItem>
               </Menu>
             </div>
           ) : (

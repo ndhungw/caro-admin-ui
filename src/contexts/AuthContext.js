@@ -70,12 +70,18 @@ export function AuthProvider({ children }) {
     return { token, user, message };
   };
 
+  const logOut = () => {
+    setTokens();
+    setCurrentUser();
+  };
+
   const value = {
     authTokens: authTokens,
     setAuthTokens: setTokens,
     currentUser,
     login,
     register,
+    logOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

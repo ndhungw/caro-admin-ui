@@ -16,8 +16,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 // react-router-dom
 import { useHistory } from "react-router-dom";
 // from this project
-import API from "../../services/api.js";
 import { useAuth } from "../../contexts/AuthContext";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,9 +47,7 @@ export default function Login({ onLogin }) {
   const classes = useStyles();
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginMessage, setLoginMessage] = useState("");
-  const { setAuthTokens } = useAuth();
   const auth = useAuth();
   const history = useHistory();
 
@@ -58,33 +56,16 @@ export default function Login({ onLogin }) {
   };
 
   const handleSubmit = async () => {
-    // try {
-    //   const data = {
-    //     email: emailValue,
-    //     password: passwordValue,
-    //   };
-    //   const result = await Axios.post(API.url + "/api/auth/login", data);
-    //   const responseData = result.data;
-
-    //   console.log(responseData);
-
-    //   if (responseData.token) {
-    //     const token = responseData.token;
-    //     console.log(token);
-    //     setAuthTokens(responseData.token);
-    //     setIsLoggedIn(true);
-    //   } else {
-    //     setLoginMessage(responseData.message);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    const { token, user, message } = await auth.login(
-      emailValue,
-      passwordValue
-    );
-    console.log(token, user, message);
-    history.push("/");
+    try {
+      const { token, user, message } = await auth.login(
+        emailValue,
+        passwordValue
+      );
+      console.log(token, user, message);
+      history.push("/");
+    } catch (error) {
+      setLoginMessage(error.message);
+    }
   };
 
   return (
@@ -97,14 +78,7 @@ export default function Login({ onLogin }) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Typography
-          variant="caption"
-          className={classes.loginMessage}
-          color="error"
-          gutterBottom
-        >
-          {loginMessage}
-        </Typography>
+        <Alert severity="error">{loginMessage}</Alert>
         <form className={classes.form} noValidate>
           <TextField
             onChange={(e) => handleChange(e, setEmailValue)}

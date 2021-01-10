@@ -18,6 +18,7 @@ import { Redirect, useHistory } from "react-router-dom";
 // from this project
 import API from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,81 +46,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
-
-  const { setAuthTokens } = useAuth();
-
   const [usernameValue, setUsernameValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [emailValue, setEmailValue] = useState("");
   const [signUpMessage, setSignUpMessage] = useState("");
-
-  const [doesSignedUp, setDoesSignedUp] = useState(false);
-
   const auth = useAuth();
   const history = useHistory();
-
-  // const checkInput = () => {
-  //   if (
-  //     firstNameValue.length === 0 ||
-  //     lastNameValue.length === 0 ||
-  //     emailValue.length === 0
-  //   ) {
-  //     return "Missing Information, please fill out all of required fields";
-  //   }
-  //   if (passwordValue.length < 5) {
-  //     return "Password too short, must be more than 5 characters";
-  //   }
-  //   return null;
-  // };
 
   const handleChange = (e, setValue) => {
     setValue(e.target.value);
   };
 
-  // const handleSignUp = async () => {
-  //   const newUser = {
-  //     username: usernameValue,
-  //     // firstName: firstNameValue,
-  //     // lastName: lastNameValue,
-  //     password: passwordValue,
-  //     email: emailValue,
-  //   };
-  //   console.log(newUser);
-  //   const check = checkInput();
-  //   if (check) {
-  //     setSignUpMessage(check);
-  //     return;
-  //   }
-  //   try {
-  //     const result = await Axios.post(API.url + "/api/auth/register", newUser);
-  //     console.log(result);
-  //     const data = result.data;
-
-  //     if (data.token) {
-  //       setAuthTokens(data.token);
-  //       setDoesSignedUp(true);
-  //     } else {
-  //       setSignUpMessage(data.message);
-  //     }
-  //   } catch (error) {
-  //     setSignUpMessage("Something went wrong, please try again");
-  //     console.log(error);
-  //   }
-  // };
-
   const handleSignUp = async () => {
-    const { token, user, message } = await auth.register(
-      emailValue,
-      usernameValue,
-      passwordValue
-    );
-    console.log(token, user, message);
-    history.push("/");
+    try {
+      const { token, user, message } = await auth.register(
+        emailValue,
+        usernameValue,
+        passwordValue
+      );
+      console.log(token, user, message);
+      if (message) {
+        setSignUpMessage(message);
+      }
+      history.push("/");
+    } catch (error) {
+      setSignUpMessage(error.message);
+    }
   };
 
-  // if (doesSignedUp) {
-  //   return <Redirect to="/"></Redirect>;
-  // }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -130,14 +84,15 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Typography
+        {/* <Typography
           variant="caption"
           className={classes.signUpMessage}
           color="error"
           gutterBottom
         >
           {signUpMessage}
-        </Typography>
+        </Typography> */}
+        {signUpMessage && <Alert severity="error">{signUpMessage}</Alert>}
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -164,31 +119,6 @@ export default function SignUp() {
                 autoComplete="email"
               />
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
-              <TextField
-                onChange={(e) => handleChange(e, setFirstNameValueValue)}
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                onChange={(e) => handleChange(e, setLastNameValueValue)}
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 onChange={(e) => handleChange(e, setPasswordValue)}
