@@ -15,75 +15,78 @@ import EnhancedTable from "../../components/EnhancedTable/EnhancedTable";
 // import SearchBar from "../../components/SearchBar/SearchBar";
 import { SearchIcon } from "@material-ui/data-grid";
 import clsx from "clsx";
+import axios from "axios";
 
-function createData(username, providers, created, updated, isActive) {
-  return { username, providers, created, updated, isActive };
-}
+import API from "../../services/api";
 
-const data = [
-  createData("Oreo", "GMail", Date.now(), Date.now(), true),
-  createData(
-    "Cupcake",
-    "GMail",
-    Date.UTC(2021, 11, 12, 3, 0, 0),
-    Date.now(),
-    true
-  ),
-  createData(
-    "Donut Cupcake Blah so many characters",
-    "GMail",
-    Date.now(),
-    Date.now(),
-    false
-  ),
-  createData(
-    "Eclair",
-    "GMail",
-    Date.UTC(2021, 11, 12, 3, 0, 0),
-    Date.now(),
-    true
-  ),
-  createData("FrozenYoghurt", "GMail", Date.now(), Date.now(), true),
-  createData(
-    "Gingerbread",
-    "GMail",
-    Date.UTC(2021, 11, 12, 3, 0, 0),
-    Date.now(),
-    true
-  ),
-  createData("Honeycomb", "GMail", Date.now(), Date.now(), true),
-  createData(
-    "Ice cream sandwich",
-    "GMail",
-    Date.UTC(2021, 11, 12, 3, 0, 0),
-    Date.now(),
-    true
-  ),
-  createData("Jelly Bean", "GMail", Date.now(), Date.now(), true),
-  createData(
-    "Jelly Bean",
-    "GMail",
-    Date.UTC(2021, 11, 12, 3, 0, 0),
-    Date.now(),
-    true
-  ),
-  createData("KitKat", "GMail", Date.now(), Date.now(), true),
-  createData(
-    "Lollipop",
-    "GMail",
-    Date.UTC(2021, 11, 12, 3, 0, 0),
-    Date.now(),
-    true
-  ),
-  createData("Marshmallow", "GMail", Date.now(), Date.now(), true),
-  createData(
-    "Nougat",
-    "GMail",
-    Date.UTC(2021, 11, 12, 3, 0, 0),
-    Date.now(),
-    true
-  ),
-];
+// function createData(username, providers, created, updated, isActive) {
+//   return { username, providers, created, updated, isActive };
+// }
+
+// const data = [
+//   createData("Oreo", "GMail", Date.now(), Date.now(), true),
+//   createData(
+//     "Cupcake",
+//     "GMail",
+//     Date.UTC(2021, 11, 12, 3, 0, 0),
+//     Date.now(),
+//     true
+//   ),
+//   createData(
+//     "Donut Cupcake Blah so many characters",
+//     "GMail",
+//     Date.now(),
+//     Date.now(),
+//     false
+//   ),
+//   createData(
+//     "Eclair",
+//     "GMail",
+//     Date.UTC(2021, 11, 12, 3, 0, 0),
+//     Date.now(),
+//     true
+//   ),
+//   createData("FrozenYoghurt", "GMail", Date.now(), Date.now(), true),
+//   createData(
+//     "Gingerbread",
+//     "GMail",
+//     Date.UTC(2021, 11, 12, 3, 0, 0),
+//     Date.now(),
+//     true
+//   ),
+//   createData("Honeycomb", "GMail", Date.now(), Date.now(), true),
+//   createData(
+//     "Ice cream sandwich",
+//     "GMail",
+//     Date.UTC(2021, 11, 12, 3, 0, 0),
+//     Date.now(),
+//     true
+//   ),
+//   createData("Jelly Bean", "GMail", Date.now(), Date.now(), true),
+//   createData(
+//     "Jelly Bean",
+//     "GMail",
+//     Date.UTC(2021, 11, 12, 3, 0, 0),
+//     Date.now(),
+//     true
+//   ),
+//   createData("KitKat", "GMail", Date.now(), Date.now(), true),
+//   createData(
+//     "Lollipop",
+//     "GMail",
+//     Date.UTC(2021, 11, 12, 3, 0, 0),
+//     Date.now(),
+//     true
+//   ),
+//   createData("Marshmallow", "GMail", Date.now(), Date.now(), true),
+//   createData(
+//     "Nougat",
+//     "GMail",
+//     Date.UTC(2021, 11, 12, 3, 0, 0),
+//     Date.now(),
+//     true
+//   ),
+// ];
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -127,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Users() {
   const classes = useStyles();
   const [users, setUsers] = React.useState([]);
+  const [usersOnTable, setUsersOnTable] = React.useState([]);
 
   // search bar things
   const [isSearchBarFocused, setIsSearchBarFocused] = React.useState(false);
@@ -147,10 +151,9 @@ export default function Users() {
   };
   //
 
-  const handleReloadClick = () => {
+  const handleReloadClick = async () => {
     // call API to get all users
-    const newUsers = [...data]; // example
-    setUsers(newUsers); // example
+    await getAllUsers();
     refreshData(); // if admin is searching someone, just show that user. If not, show all
   };
 
@@ -159,23 +162,40 @@ export default function Users() {
 
     if (!searchText) {
       // show all users
+      setUsersOnTable(users);
     } else {
       // show a specific user
-      const updatedList = users.filter((user) => user.username === searchText);
-      setUsers(updatedList); // example
+      const updatedList = users.filter(
+        (user) =>
+          user.username.toLowerCase() === searchText.toLowerCase() ||
+          user.email.toLowerCase() === searchText.toLowerCase() ||
+          user.firstName.toLowerCase() === searchText.toLowerCase() ||
+          user.lastName.toLowerCase() === searchText.toLowerCase()
+      );
+      setUsersOnTable(updatedList); // example
     }
   };
+
+  const getAllUsers = async () => {
+    const response = await axios.get(`${API.url}/api/client-users`);
+    const usersResponse = response.data;
+    setUsers(usersResponse);
+    console.log(usersResponse);
+  };
+
+  React.useEffect(() => {
+    getAllUsers();
+  }, []);
+
+  React.useEffect(() => {
+    setUsersOnTable(users);
+  }, [users]);
 
   return (
     <div>
       <Container maxWidth="md">
         <Paper className={classes.paper}>
           <div className={classes.toolbarTop}>
-            {/* <SearchBar
-              className={classes.searchBar}
-              reloadUserList={handleReloadClick}
-            /> */}
-
             {/* Search bar */}
             <Paper
               onClick={() => setIsSearchBarFocused(true)}
@@ -213,7 +233,10 @@ export default function Users() {
               </Tooltip>
             </IconButton>
           </div>
-          <EnhancedTable users={users} />
+          <EnhancedTable
+            users={usersOnTable}
+            handleReloadClick={handleReloadClick}
+          />
         </Paper>
       </Container>
     </div>

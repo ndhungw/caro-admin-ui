@@ -8,6 +8,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
+import axios from "axios";
+import API from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
   dialogContent: {
@@ -48,8 +50,41 @@ export default function AlertDialog({
   content,
   agreeText,
   handleClose,
+  actionExecOnUser,
+  handleReloadClick,
+  userId,
 }) {
   const classes = useStyles();
+
+  const handleClick = () => {
+    if (actionExecOnUser === "enable") {
+      handleActivateStatus(true);
+    } else if (actionExecOnUser === "disable") {
+      handleActivateStatus(false);
+    } else if (actionExecOnUser === "delete") {
+      handleDeleteUser(userId);
+    }
+
+    handleReloadClick();
+    handleClose();
+  };
+
+  const handleActivateStatus = async (isActivate) => {
+    // call API
+    const response = await axios.put(`${API.url}/api/client-users/${userId}`, {
+      active: isActivate,
+    });
+    console.log(response);
+  };
+
+  const handleDeleteUser = async (userId) => {
+    // call API
+    const response = await axios.delete(
+      `${API.url}/api/client-users/${userId}`
+    );
+    console.log(response);
+  };
+
   return (
     <div>
       <Dialog
@@ -75,7 +110,7 @@ export default function AlertDialog({
             <strong>Cancel</strong>
           </Button>
           <Button
-            onClick={handleClose}
+            onClick={handleClick}
             className={clsx({
               [classes.buttonAgree]: severity === "info",
               [classes.buttonSeveritySerious]: severity !== "info",

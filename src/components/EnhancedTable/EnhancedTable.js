@@ -47,75 +47,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// function createData(username, providers, created, updated, isActive) {
-//   return { username, providers, created, updated, isActive };
-// }
-
-// const rows = [
-//   createData("Oreo", "GMail", Date.now(), Date.now(), true),
-//   createData(
-//     "Cupcake",
-//     "GMail",
-//     Date.UTC(2021, 11, 12, 3, 0, 0),
-//     Date.now(),
-//     true
-//   ),
-//   createData(
-//     "Donut Cupcake Blah so many characters",
-//     "GMail",
-//     Date.now(),
-//     Date.now(),
-//     false
-//   ),
-//   createData(
-//     "Eclair",
-//     "GMail",
-//     Date.UTC(2021, 11, 12, 3, 0, 0),
-//     Date.now(),
-//     true
-//   ),
-//   createData("FrozenYoghurt", "GMail", Date.now(), Date.now(), true),
-//   createData(
-//     "Gingerbread",
-//     "GMail",
-//     Date.UTC(2021, 11, 12, 3, 0, 0),
-//     Date.now(),
-//     true
-//   ),
-//   createData("Honeycomb", "GMail", Date.now(), Date.now(), true),
-//   createData(
-//     "Ice cream sandwich",
-//     "GMail",
-//     Date.UTC(2021, 11, 12, 3, 0, 0),
-//     Date.now(),
-//     true
-//   ),
-//   createData("Jelly Bean", "GMail", Date.now(), Date.now(), true),
-//   createData(
-//     "Jelly Bean",
-//     "GMail",
-//     Date.UTC(2021, 11, 12, 3, 0, 0),
-//     Date.now(),
-//     true
-//   ),
-//   createData("KitKat", "GMail", Date.now(), Date.now(), true),
-//   createData(
-//     "Lollipop",
-//     "GMail",
-//     Date.UTC(2021, 11, 12, 3, 0, 0),
-//     Date.now(),
-//     true
-//   ),
-//   createData("Marshmallow", "GMail", Date.now(), Date.now(), true),
-//   createData(
-//     "Nougat",
-//     "GMail",
-//     Date.UTC(2021, 11, 12, 3, 0, 0),
-//     Date.now(),
-//     true
-//   ),
-// ];
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -144,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   username: {
-    width: "100px",
+    width: "70px",
   },
   usernameCell: {
     display: "flex",
@@ -152,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable({ users }) {
+export default function EnhancedTable({ users, handleReloadClick }) {
   const classes = useStyles();
   // order
   const [order, setOrder] = React.useState("asc");
@@ -165,6 +96,7 @@ export default function EnhancedTable({ users }) {
   // optional
   const [dense, setDense] = React.useState(false);
 
+  // React.useEffect(() => {}, [users]);
   // handle sorting
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -281,14 +213,44 @@ export default function EnhancedTable({ users }) {
                               {row.username}
                             </Typography>
                           </Tooltip>
-                          {!row.isActive && <Chip label="Disabled" disabled />}
+                          {!row.active && <Chip label="Disabled" disabled />}
                         </div>
                       </TableCell>
-                      <TableCell align="left">{row.providers}</TableCell>
-                      <TableCell align="left">{row.created}</TableCell>
-                      <TableCell align="left">{row.updated}</TableCell>
+
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                        <div className={classes.userDisplayName}>
+                          <Tooltip title={`${row.firstName} ${row.lastName}`}>
+                            <Typography
+                              className={classes.userDisplayName}
+                              noWrap
+                            >
+                              {`${row.firstName} ${row.lastName}`}
+                            </Typography>
+                          </Tooltip>
+                        </div>
+                      </TableCell>
+
                       <TableCell align="left">
-                        <CustomizedMenus isActiveUser={row.isActive} />
+                        {row.providers || "Email"}
+                      </TableCell>
+                      <TableCell align="left">
+                        {new Date(row.createdAt).toLocaleString()}
+                      </TableCell>
+                      <TableCell align="left">
+                        {new Date(row.updatedAt).toLocaleString()}
+                      </TableCell>
+                      <TableCell align="left">
+                        <CustomizedMenus
+                          userId={row._id}
+                          userEmail={row.email}
+                          isActiveUser={row.active}
+                          handleReloadClick={handleReloadClick}
+                        />
                       </TableCell>
                     </TableRow>
                   );

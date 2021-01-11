@@ -68,6 +68,12 @@ const headCells = [
     label: "Username",
   },
   {
+    id: "name",
+    numeric: false,
+    disablePadding: true,
+    label: "Name",
+  },
+  {
     id: "providers",
     numeric: false,
     disablePadding: false,

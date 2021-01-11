@@ -48,7 +48,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomizedMenus({ isActiveUser }) {
+export default function CustomizedMenus({
+  userId,
+  userEmail,
+  isActiveUser,
+  handleReloadClick,
+}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -58,9 +63,7 @@ export default function CustomizedMenus({ isActiveUser }) {
     "Alert description"
   );
   const [agreeText, setAgreeText] = React.useState("Send");
-  const user = {
-    email: "ndh1379@gmail.com",
-  };
+  const [actionExecOnUser, setActionExecOnUser] = React.useState();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -70,25 +73,25 @@ export default function CustomizedMenus({ isActiveUser }) {
     setAnchorEl(null);
   };
 
-  // title, severity, alertDescription, agreeText
-  const handleResetPasswordClick = () => {
+  // // title, severity, alertDescription, agreeText
+  // const handleResetPasswordClick = () => {
+  //   handleClose();
+  //   setOpenDialog(true);
+
+  //   // set corresponding values to [title, severity, alertDescription, agreeText]
+  //   setTitle("Reset password");
+  //   setSeverity("info");
+  //   setAlertDescription("Send a password reset email.");
+  //   setAgreeText("Send");
+
+  //   // call API
+  // };
+
+  const handleDisableUserClick = async () => {
     handleClose();
     setOpenDialog(true);
 
-    // set corresponding values to [title, severity, alertDescription, agreeText]
-    setTitle("Reset password");
-    setSeverity("info");
-    setAlertDescription("Send a password reset email.");
-    setAgreeText("Send");
-
-    // call API
-  };
-
-  const handleDisableUserClick = () => {
-    handleClose();
-    setOpenDialog(true);
-
-    // set corresponding values to [title, severity, alertDescription, agreeText]
+    // create dialog -> set corresponding values to [title, severity, alertDescription, agreeText]
     setTitle("Disable user");
     setSeverity("warning");
     setAlertDescription(
@@ -96,10 +99,10 @@ export default function CustomizedMenus({ isActiveUser }) {
     );
     setAgreeText("Disable");
 
-    // call API
+    setActionExecOnUser("disable");
   };
 
-  const handleEnableUserClick = () => {
+  const handleEnableUserClick = async () => {
     handleClose();
     setOpenDialog(true);
 
@@ -111,7 +114,7 @@ export default function CustomizedMenus({ isActiveUser }) {
     );
     setAgreeText("Enable");
 
-    // call API
+    setActionExecOnUser("enable");
   };
 
   const handleDeleteUserClick = () => {
@@ -126,7 +129,7 @@ export default function CustomizedMenus({ isActiveUser }) {
     );
     setAgreeText("Delete");
 
-    // call API
+    setActionExecOnUser("delete");
   };
 
   return (
@@ -152,33 +155,21 @@ export default function CustomizedMenus({ isActiveUser }) {
         onClose={handleClose}
         disableAutoFocusItem={true}
       >
-        <StyledMenuItem onClick={handleResetPasswordClick}>
-          {/* <ListItemIcon>
-            <RotateLeftIcon fontSize="medium" />
-          </ListItemIcon> */}
+        {/* <StyledMenuItem onClick={handleResetPasswordClick}>
           <ListItemText primary="Reset password" />
-        </StyledMenuItem>
+        </StyledMenuItem> */}
 
         {isActiveUser ? (
           <StyledMenuItem onClick={handleDisableUserClick}>
-            {/* <ListItemIcon>
-              <BlockIcon fontSize="medium" />
-            </ListItemIcon> */}
             <ListItemText primary="Disable user" />
           </StyledMenuItem>
         ) : (
           <StyledMenuItem onClick={handleEnableUserClick}>
-            {/* <ListItemIcon>
-              <BlockIcon fontSize="medium" />
-            </ListItemIcon> */}
             <ListItemText primary="Enable user" />
           </StyledMenuItem>
         )}
 
         <StyledMenuItem onClick={handleDeleteUserClick}>
-          {/* <ListItemIcon>
-            <DeleteIcon fontSize="medium" />
-          </ListItemIcon> */}
           <ListItemText primary="Delete user" />
         </StyledMenuItem>
       </StyledMenu>
@@ -192,12 +183,15 @@ export default function CustomizedMenus({ isActiveUser }) {
           <>
             <Typography variant="subtitle2">User account</Typography>
             <Typography variant="h6">
-              {user.email || "example@gmail.com"}
+              {userEmail || "example@gmail.com"}
             </Typography>
           </>
         }
         agreeText={agreeText}
         handleClose={() => setOpenDialog(false)}
+        actionExecOnUser={actionExecOnUser}
+        handleReloadClick={handleReloadClick}
+        userId={userId}
       />
     </div>
   );
