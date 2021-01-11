@@ -25,6 +25,7 @@ import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import logo from "../../assets/img/logo.png";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
+import { Link as RRDLink } from "react-router-dom";
 
 const drawerWidth = 220;
 const navigationList = ["Users", "Games"];
@@ -110,6 +111,10 @@ const useStyles = makeStyles((theme) => ({
   rightSide: {
     justifySelf: "flex-end",
     backgroundColor: "green",
+  },
+  RRDLink: {
+    textDecoration: "none",
+    color: "inherit",
   },
 }));
 
@@ -215,22 +220,40 @@ export default function MiniDrawer({ children }) {
             }),
           }}
         >
-          <div className={classes.logoTitle}>
-            <img src={logo} alt="logo" className={classes.logo} />
-            <Typography variant="h6" noWrap className={classes.title}>
-              <strong>ADMIN PANEL</strong>
-            </Typography>
-          </div>
+          <RRDLink to="/" className={classes.RRDLink}>
+            <div className={classes.logoTitle}>
+              <img src={logo} alt="logo" className={classes.logo} />
+              <Typography variant="h6" noWrap className={classes.title}>
+                <strong>ADMIN PANEL</strong>
+              </Typography>
+            </div>
+          </RRDLink>
           <Divider />
           <List>
-            {navigationList.map((text, index) => (
+            {/* {navigationList.map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <SportsEsportsIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
-            ))}
+            ))} */}
+            <RRDLink to="/users" className={classes.RRDLink}>
+              <ListItem button key={"users-page"}>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Users"}></ListItemText>
+              </ListItem>
+            </RRDLink>
+            <RRDLink to="/games" className={classes.RRDLink}>
+              <ListItem button key={"games-page"}>
+                <ListItemIcon>
+                  <SportsEsportsIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Games"}></ListItemText>
+              </ListItem>
+            </RRDLink>
           </List>
           <Divider />
 
