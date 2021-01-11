@@ -164,15 +164,24 @@ export default function Users() {
       // show all users
       setUsersOnTable(users);
     } else {
-      // show a specific user
-      const updatedList = users.filter(
-        (user) =>
-          user.username.toLowerCase() === searchText.toLowerCase() ||
-          user.email.toLowerCase() === searchText.toLowerCase() ||
-          user.firstName.toLowerCase() === searchText.toLowerCase() ||
-          user.lastName.toLowerCase() === searchText.toLowerCase()
-      );
-      setUsersOnTable(updatedList); // example
+      let updatedList = [];
+      if (searchText.toLowerCase() === "disabled") {
+        // show disabled user
+        updatedList = users.filter((user) => user.active === false);
+      } else if (searchText.toLowerCase() === "enabled") {
+        // show enabled user
+        updatedList = users.filter((user) => user.active === true);
+      } else {
+        // show a specific user
+        updatedList = users.filter(
+          (user) =>
+            user.username.toLowerCase() === searchText.toLowerCase() ||
+            user.email.toLowerCase() === searchText.toLowerCase() ||
+            user.firstName.toLowerCase() === searchText.toLowerCase() ||
+            user.lastName.toLowerCase() === searchText.toLowerCase()
+        );
+      }
+      setUsersOnTable(updatedList);
     }
   };
 
@@ -208,7 +217,7 @@ export default function Users() {
                 <SearchIcon className={classes.searchIcon} />
                 <InputBase
                   className={classes.inputBase}
-                  placeholder="Search by username"
+                  placeholder="Search by username, email, first/last/full name or disabled/enabled"
                   inputRef={searchTextRef}
                   onKeyPress={handleKeyPress}
                 />
