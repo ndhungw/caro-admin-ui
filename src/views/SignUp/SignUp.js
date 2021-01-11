@@ -12,11 +12,9 @@ import { makeStyles } from "@material-ui/core/styles";
 // icons
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 //
-import Axios from "axios";
 // react-router-dom
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 // from this project
-import API from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import Alert from "@material-ui/lab/Alert";
 

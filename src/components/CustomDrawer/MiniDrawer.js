@@ -24,11 +24,9 @@ import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 // assets
 import logo from "../../assets/img/logo.png";
 import { useAuth } from "../../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
 import { Link as RRDLink } from "react-router-dom";
 
 const drawerWidth = 220;
-const navigationList = ["Users", "Games"];
 
 const useStyles = makeStyles((theme) => ({
   root: {
