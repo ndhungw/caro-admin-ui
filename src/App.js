@@ -12,6 +12,9 @@ import EnhancedTableHead from "./components/EnhancedTable/EnhancedTableHead";
 import { Container, Typography } from "@material-ui/core";
 import Users from "./views/Users/Users";
 import AlertDialog from "./components/Dialog/AlertDialog";
+import Games from "./views/Games/Games";
+// import UserProfile from "./views/UserProfile/UserProfile";
+// import PlayerCard from "./components/PlayerCard/PlayerCard";
 
 function App() {
   return (
@@ -31,6 +34,18 @@ function App() {
               </MiniDrawer>
             </PrivateRoute>
 
+            <PrivateRoute exact path="/games">
+              <MiniDrawer>
+                <Games />
+              </MiniDrawer>
+            </PrivateRoute>
+
+            {/* <PrivateRoute path="/users/:id">
+              <MiniDrawer>
+                <UserProfile />
+              </MiniDrawer>
+            </PrivateRoute> */}
+
             <Route path="/login">
               <Login />
             </Route>
@@ -42,6 +57,10 @@ function App() {
             <Route path="/mini-drawer">
               <MiniDrawer />
             </Route>
+
+            {/* <Route path="/player-card">
+              <PlayerCard />
+            </Route> */}
 
             {/* Data table */}
             <Route path="/table">
