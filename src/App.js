@@ -13,8 +13,8 @@ import { Container, Typography } from "@material-ui/core";
 import Users from "./views/Users/Users";
 import AlertDialog from "./components/Dialog/AlertDialog";
 import Games from "./views/Games/Games";
-// import UserProfile from "./views/UserProfile/UserProfile";
-// import PlayerCard from "./components/PlayerCard/PlayerCard";
+import UserProfile from "./views/UserProfile/ClientUserProfile";
+import GameRecords from "./components/GameRecords/GameRecords";
 
 function App() {
   return (
@@ -40,11 +40,11 @@ function App() {
               </MiniDrawer>
             </PrivateRoute>
 
-            {/* <PrivateRoute path="/users/:id">
+            <PrivateRoute path="/users/:username">
               <MiniDrawer>
                 <UserProfile />
               </MiniDrawer>
-            </PrivateRoute> */}
+            </PrivateRoute>
 
             <Route path="/login">
               <Login />
@@ -54,13 +54,13 @@ function App() {
             </Route>
 
             {/* Test  */}
+            <Route path="/game-records">
+              <GameRecords username="user001" />
+            </Route>
+
             <Route path="/mini-drawer">
               <MiniDrawer />
             </Route>
-
-            {/* <Route path="/player-card">
-              <PlayerCard />
-            </Route> */}
 
             {/* Data table */}
             <Route path="/table">
