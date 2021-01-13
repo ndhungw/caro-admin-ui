@@ -15,6 +15,7 @@ import AlertDialog from "./components/Dialog/AlertDialog";
 import Games from "./views/Games/Games";
 import UserProfile from "./views/UserProfile/ClientUserProfile";
 import GameRecords from "./components/GameRecords/GameRecords";
+import RewatchRoom from "./views/RewatchRoom/rewatchRoom-component";
 
 function App() {
   return (
@@ -46,6 +47,12 @@ function App() {
               </MiniDrawer>
             </PrivateRoute>
 
+            <PrivateRoute path="/game-records/:id">
+              <MiniDrawer>
+                <RewatchRoom />
+              </MiniDrawer>
+            </PrivateRoute>
+
             <Route path="/login">
               <Login />
             </Route>
@@ -54,6 +61,10 @@ function App() {
             </Route>
 
             {/* Test  */}
+            <Route path="/rewatch-room/:id">
+              <RewatchRoom />
+            </Route>
+
             <Route path="/game-records">
               <GameRecords username="user001" />
             </Route>

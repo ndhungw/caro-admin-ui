@@ -63,6 +63,10 @@ const useStyles = makeStyles((theme) => ({
   gridItemLeft: {
     backgroundColor: "blue",
   },
+  RRDLinkNormalized: {
+    textDecoration: "none",
+    color: "inherit",
+  },
 }));
 
 // function createData(player1, player2, winner, createdAt) {
@@ -210,7 +214,10 @@ export default function GameRecords({ username, data }) {
           >
             <Grid container spacing={1} className={classes.gameInfo}>
               <Grid container xs={3} justify="flex-end" alignItems="center">
-                <RRDLink to={`/users/${record.player1.username}`}>
+                <RRDLink
+                  to={`/users/${record.player1.username}`}
+                  className={classes.RRDLinkNormalized}
+                >
                   <Chip
                     className={classes.singleInfo}
                     icon={<FaceIcon />}
@@ -225,7 +232,10 @@ export default function GameRecords({ username, data }) {
                 <Chip label={<strong>VS</strong>} />
               </Grid>
               <Grid container xs={3} justify="flex-start" alignItems="center">
-                <RRDLink to={`/users/${record.player2.username}`}>
+                <RRDLink
+                  to={`/users/${record.player2.username}`}
+                  className={classes.RRDLinkNormalized}
+                >
                   <Chip
                     className={classes.singleInfo}
                     icon={<FaceIcon />}
@@ -247,7 +257,12 @@ export default function GameRecords({ username, data }) {
                 </Typography>
               </Grid>
             </Grid>
-            <Button variant="contained">{"Xem"}</Button>
+            <RRDLink
+              to={`/game-records/${record.gameId}`}
+              className={classes.RRDLinkNormalized}
+            >
+              <Button variant="contained">{"Xem"}</Button>
+            </RRDLink>
           </Paper>
         );
       })}
