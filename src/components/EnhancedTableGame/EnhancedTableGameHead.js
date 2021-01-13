@@ -29,10 +29,10 @@ const headCells = [
   },
   { id: "created", numeric: false, disablePadding: false, label: "Created" },
   {
-    id: "chat-history",
+    id: "action",
     numeric: false,
     disablePadding: false,
-    label: "Chat history",
+    label: "Action",
   },
 ];
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link as RRDLink } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -13,6 +14,7 @@ import {
   Chip,
   Typography,
   Tooltip,
+  Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // from this project
@@ -80,6 +82,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
   },
+  RRDLinkNormalized: {
+    textDecoration: "none",
+    color: "inherit",
+  },
 }));
 
 export default function EnhancedTableGame({ games, handleReloadClick }) {
@@ -105,19 +111,19 @@ export default function EnhancedTableGame({ games, handleReloadClick }) {
   // handle Click
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = games.map((n) => n.username);
+      const newSelecteds = games.map((n) => n.gameId);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, username) => {
-    const selectedIndex = selected.indexOf(username);
+  const handleClick = (event, gameId) => {
+    const selectedIndex = selected.indexOf(gameId);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, username);
+      newSelected = newSelected.concat(selected, gameId);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -179,26 +185,23 @@ export default function EnhancedTableGame({ games, handleReloadClick }) {
               {stableSort(games, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.username);
+                  const isItemSelected = isSelected(row.gameId);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
+                      key={row.gameId}
                       hover
                       // onClick={(event) => handleClick(event, row.username)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.username}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           onClick={(event) =>
-                            handleClick(
-                              event,
-                              row.username /* row.createdAt ? */
-                            )
+                            handleClick(event, row.gameId /* row.createdAt ? */)
                           } // only by click to checkbox will select row
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
@@ -213,9 +216,8 @@ export default function EnhancedTableGame({ games, handleReloadClick }) {
                         padding="none"
                       >
                         <div className={classes.usernameCell}>
-                          <Tooltip title={row.username}>
+                          <Tooltip title={row.roomId}>
                             <Typography className={classes.username} noWrap>
-                              {/* {row.username} */}
                               {row.roomId}
                             </Typography>
                           </Tooltip>
@@ -229,40 +231,59 @@ export default function EnhancedTableGame({ games, handleReloadClick }) {
                         scope="row"
                         padding="none"
                       >
-                        <div className={classes.userDisplayName}>
-                          <Tooltip title={`${row.firstName} ${row.lastName}`}>
-                            <Typography
-                              className={classes.userDisplayName}
-                              noWrap
-                            >
-                              {/* {`${row.firstName} ${row.lastName}`} */}
-                              {row.player1 || "Player 1"}
-                              {row.winner === 1 ? (
-                                <Chip
-                                  label="WIN"
-                                  color="primary"
-                                  size="small"
-                                />
-                              ) : (
-                                <Chip
-                                  label="LOSE"
-                                  color="secondary"
-                                  size="small"
-                                />
-                              )}
+                        <Tooltip
+                          title={`${row.player1.firstName} ${row.player1.lastName}`}
+                        >
+                          <div style={{ display: "flex" }}>
+                            <Typography noWrap>
+                              {row.player1.username || "Player 1"}
                             </Typography>
-                          </Tooltip>
-                        </div>
+                            {row.winner === 1 ? (
+                              <Chip label="WIN" color="primary" size="small" />
+                            ) : row.winner === 2 ? (
+                              <Chip
+                                label="LOSE"
+                                color="secondary"
+                                size="small"
+                              />
+                            ) : row.winner === 3 ? (
+                              <Chip label="DRAW" color="green" size="small" />
+                            ) : (
+                              <Chip label="QUIT" disabled size="small" />
+                            )}
+                          </div>
+                        </Tooltip>
                       </TableCell>
 
                       {/* Player2 */}
-                      <TableCell align="left">
-                        {row.player2 || "Player 2"}
-                        {row.winner === 2 ? (
-                          <Chip label="WIN" color="primary" size="small" />
-                        ) : (
-                          <Chip label="LOSE" color="secondary" size="small" />
-                        )}
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                        <Tooltip
+                          title={`${row.player2.firstName} ${row.player2.lastName}`}
+                        >
+                          <div style={{ display: "flex" }}>
+                            <Typography noWrap>
+                              {row.player2.username || "Player 2"}
+                            </Typography>
+                            {row.winner === 2 ? (
+                              <Chip label="WIN" color="primary" size="small" />
+                            ) : row.winner === 1 ? (
+                              <Chip
+                                label="LOSE"
+                                color="secondary"
+                                size="small"
+                              />
+                            ) : row.winner === 3 ? (
+                              <Chip label="DRAW" color="green" size="small" />
+                            ) : (
+                              <Chip label="QUIT" disabled size="small" />
+                            )}
+                          </div>
+                        </Tooltip>
                       </TableCell>
 
                       {/* createdAt */}
@@ -272,16 +293,13 @@ export default function EnhancedTableGame({ games, handleReloadClick }) {
 
                       {/* chat history */}
                       <TableCell align="left">
-                        {row.chatHistory || "chat history here"}
+                        <RRDLink
+                          className={classes.RRDLinkNormalized}
+                          to={`/game-records/${row.gameId}`}
+                        >
+                          <Button variant="contained">{"Xem"}</Button>
+                        </RRDLink>
                       </TableCell>
-                      {/* <TableCell align="left">
-                        <CustomizedMenus
-                          userId={row._id}
-                          userEmail={row.email}
-                          isActiveUser={row.active}
-                          handleReloadClick={handleReloadClick}
-                        />
-                      </TableCell> */}
                     </TableRow>
                   );
                 })}

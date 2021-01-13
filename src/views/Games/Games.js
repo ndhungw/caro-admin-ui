@@ -13,42 +13,42 @@ import ClearIcon from "@material-ui/icons/Clear";
 import { SearchIcon } from "@material-ui/data-grid";
 // from this project
 import EnhancedTableGame from "../../components/EnhancedTableGame/EnhancedTableGame";
-import API from "../../services/api";
 //
 import clsx from "clsx";
 import axios from "axios";
+import API from "../../services/api";
 
 // roomId, player1, player2, winner, createdAt, (history), (chatHistory)
-function createData(roomId, player1, player2, winner, createdAt, chatHistory) {
-  return { roomId, player1, player2, winner, createdAt, chatHistory };
-}
+// function createData(roomId, player1, player2, winner, createdAt, chatHistory) {
+//   return { roomId, player1, player2, winner, createdAt, chatHistory };
+// }
 
-const data = [
-  createData(
-    "000",
-    "user001",
-    "user002",
-    1,
-    new Date(Date.now()).toLocaleString(),
-    null /* chat history will be implement later */
-  ),
-  createData(
-    "000",
-    "user001",
-    "user002",
-    2,
-    new Date(Date.now()).toLocaleString(),
-    null /* chat history will be implement later */
-  ),
-  createData(
-    "001",
-    "user001",
-    "user003",
-    2,
-    new Date(Date.now()).toLocaleString(),
-    null /* chat history will be implement later */
-  ),
-];
+// const data = [
+//   createData(
+//     "000",
+//     "user001",
+//     "user002",
+//     1,
+//     new Date(Date.now()).toLocaleString(),
+//     null /* chat history will be implement later */
+//   ),
+//   createData(
+//     "000",
+//     "user001",
+//     "user002",
+//     2,
+//     new Date(Date.now()).toLocaleString(),
+//     null /* chat history will be implement later */
+//   ),
+//   createData(
+//     "001",
+//     "user001",
+//     "user003",
+//     2,
+//     new Date(Date.now()).toLocaleString(),
+//     null /* chat history will be implement later */
+//   ),
+// ];
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -115,7 +115,7 @@ export default function Games() {
 
   const handleReloadClick = async () => {
     // call API to get all games
-    await getAllGames();
+    // await getAllGames();
     refreshData(); // if admin is searching someone, just show that user. If not, show all
   };
 
@@ -138,25 +138,34 @@ export default function Games() {
         updatedList = games.filter(
           (game) =>
             game.roomId.toLowerCase() === searchText.toLowerCase() ||
-            game.email.toLowerCase() === searchText.toLowerCase() ||
-            game.firstName.toLowerCase() === searchText.toLowerCase() ||
-            game.lastName.toLowerCase() === searchText.toLowerCase()
+            game.player1.username.toLowerCase() === searchText.toLowerCase() ||
+            game.player1.firstName.toLowerCase() === searchText.toLowerCase() ||
+            game.player1.lastName.toLowerCase() === searchText.toLowerCase() ||
+            game.player2.username.toLowerCase() === searchText.toLowerCase() ||
+            game.player2.firstName.toLowerCase() === searchText.toLowerCase() ||
+            game.player2.lastName.toLowerCase() === searchText.toLowerCase()
         );
       }
       setGamesOnTable(updatedList);
     }
   };
 
-  const getAllGames = async () => {
-    // const response = await axios.get(`${API.url}/api/game`);
-    // const gamesResponse = response.data;
-    // console.log(gamesResponse);
-    // setGames(gamesResponse);
-    setGames(data);
-  };
-
   React.useEffect(() => {
-    // getAllGames();
+    const getAllGames = async () => {
+      const response = await axios.get(
+        `${API.clientURL}/game-records`
+        // "http://localhost:4000/game-records"
+      );
+
+      const gameRecords = response.data.gameRecords;
+      console.log(gameRecords);
+      setGames(gameRecords);
+
+      // hot test
+      // setGames(data);
+    };
+
+    getAllGames();
   }, []);
 
   React.useEffect(() => {
@@ -180,7 +189,7 @@ export default function Games() {
                 <SearchIcon className={classes.searchIcon} />
                 <InputBase
                   className={classes.inputBase}
-                  placeholder="Search by roomId, email, first/last/full name or disabled/enabled"
+                  placeholder="Search by roomId, username, first/last name"
                   inputRef={searchTextRef}
                   onKeyPress={handleKeyPress}
                 />
