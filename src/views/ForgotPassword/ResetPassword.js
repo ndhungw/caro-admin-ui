@@ -74,7 +74,10 @@ export default function ResetPassword() {
 
   React.useEffect(() => {
     if (resetSuccessfully) {
-      const timeout = setTimeout(() => history.push("/"), timeCountDown * 1000);
+      const timeout = setTimeout(
+        () => history.push("/login"),
+        timeCountDown * 1000
+      );
 
       return () => clearTimeout(timeout);
     }

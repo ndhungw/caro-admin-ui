@@ -48,8 +48,8 @@ export default function SignUp() {
   const [passwordValue, setPasswordValue] = useState("");
   const [emailValue, setEmailValue] = useState("");
   const [signUpMessage, setSignUpMessage] = useState("");
+  const [severity, setSeverity] = useState("error");
   const auth = useAuth();
-  const history = useHistory();
 
   const handleChange = (e, setValue) => {
     setValue(e.target.value);
@@ -66,9 +66,12 @@ export default function SignUp() {
       if (message) {
         setSignUpMessage(message);
       }
-      history.push("/");
+
+      setSeverity("success");
+      setSignUpMessage("Check your email to get activation url.");
     } catch (error) {
-      setSignUpMessage(error.message);
+      setSeverity("error");
+      setSignUpMessage("Sign up failed");
     }
   };
 
@@ -82,15 +85,9 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        {/* <Typography
-          variant="caption"
-          className={classes.signUpMessage}
-          color="error"
-          gutterBottom
-        >
-          {signUpMessage}
-        </Typography> */}
-        {signUpMessage && <Alert severity="error">{signUpMessage}</Alert>}
+
+        {signUpMessage && <Alert severity={severity}>{signUpMessage}</Alert>}
+
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>

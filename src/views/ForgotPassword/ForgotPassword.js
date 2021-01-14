@@ -8,7 +8,6 @@ import {
 import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
 import React from "react";
-import { useParams } from "react-router-dom";
 import API from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,8 +22,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2, 0),
   },
 }));
-
-const timeCountDown = 5;
 
 export default function ForgotPassword() {
   const classes = useStyles();

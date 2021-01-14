@@ -78,7 +78,7 @@ export default function Login({ onLogin }) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Alert severity="error">{loginMessage}</Alert>
+        {loginMessage && <Alert severity="error">{loginMessage}</Alert>}
         <form className={classes.form} noValidate>
           <TextField
             onChange={(e) => handleChange(e, setEmailValue)}
@@ -117,7 +117,17 @@ export default function Login({ onLogin }) {
             Sign In
           </Button>
 
-          <Grid container justify="flex-end">
+          <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+          >
+            <Grid item>
+              <Link href="/forgot-password" variant="body2">
+                {"Forgot password? Click!"}
+              </Link>
+            </Grid>
             <Grid item>
               <Link href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
