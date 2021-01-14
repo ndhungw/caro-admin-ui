@@ -20,6 +20,7 @@ import EnhancedTableToolbar from "./EnhancedTableToolbar";
 import EnhancedTableHead from "./EnhancedTableHead";
 import CustomTablePaginationActions from "./TablePaginationActions";
 import CustomizedMenus from "../IconMenuButton/IconMenuButton";
+import { Link as RRDLink } from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -80,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
   usernameCell: {
     display: "flex",
     alignItems: "center",
+  },
+  LinkNormalized: {
+    textDecoration: "none",
+    color: "inherit",
   },
 }));
 
@@ -210,7 +215,12 @@ export default function EnhancedTable({ users, handleReloadClick }) {
                         <div className={classes.usernameCell}>
                           <Tooltip title={row.username}>
                             <Typography className={classes.username} noWrap>
-                              {row.username}
+                              <RRDLink
+                                className={classes.LinkNormalized}
+                                to={`/users/${row.username}`}
+                              >
+                                {row.username}
+                              </RRDLink>
                             </Typography>
                           </Tooltip>
                           {!row.active && <Chip label="Disabled" disabled />}

@@ -200,9 +200,7 @@ export default function EnhancedTableGame({ games, handleReloadClick }) {
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
-                          onClick={(event) =>
-                            handleClick(event, row.gameId /* row.createdAt ? */)
-                          } // only by click to checkbox will select row
+                          onClick={(event) => handleClick(event, row.gameId)} // only by click to checkbox will select row
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                         />
